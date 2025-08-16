@@ -32,11 +32,11 @@ public class Topico {
 
     @CreatedDate
     @Column(name = "data_criacao", updatable = false)
-    private LocalDateTime data_criacao;
+    private LocalDateTime dataCriacao;
 
     @LastModifiedDate
     @Column(name = "data_atualizacao")
-    private LocalDateTime data_atualizacao;
+    private LocalDateTime dataAtualizacao;
 
     @Enumerated(EnumType.STRING)
     private StatusTopico status;
