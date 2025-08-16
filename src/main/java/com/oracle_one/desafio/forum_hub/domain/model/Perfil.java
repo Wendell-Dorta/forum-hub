@@ -1,8 +1,7 @@
 package com.oracle_one.desafio.forum_hub.domain.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,7 +15,11 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = "id")
 public class Perfil {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private com.oracle_one.desafio.forum_hub.domain.enums.Perfil nome;
 
 }
