@@ -35,6 +35,9 @@ public class TopicoService {
     private List<ValidadorCadastroTopico> validadorCadastroTopicos;
 
     @Autowired
+    private List<ValidadorAtualizacaoTopico> validadorAtualizacaoTopicos;
+
+    @Autowired
     private List<ValidadorTopico> validadorTopicos;
 
     @Transactional
@@ -62,6 +65,8 @@ public class TopicoService {
 
     @Transactional
     public DadosDetalhamentoTopico atualizar(DadosAtualizacaoTopico dados) {
+        validadorAtualizacaoTopicos.forEach(v -> v.validar(dados));
+
         var topico = topicoRepository.getReferenceById(dados.id());
         topico.atualizarInformacoes(dados);
         topicoRepository.saveAndFlush(topico);
