@@ -2,6 +2,7 @@ package com.oracle_one.desafio.forum_hub.api.exception;
 
 import com.oracle_one.desafio.forum_hub.domain.exception.RegraDeNegocioException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,8 +18,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class TratadorDeErros {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity tratarErro404() {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity tratarErro404(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity tratarErro404RecursoNaoEncontrado(EmptyResultDataAccessException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recurso não encontrado.");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -62,5 +68,4 @@ public class TratadorDeErros {
             this(erro.getField(), erro.getDefaultMessage());
         }
     }
-
 }
