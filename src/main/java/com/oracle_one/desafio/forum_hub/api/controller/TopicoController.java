@@ -1,6 +1,7 @@
 package com.oracle_one.desafio.forum_hub.api.controller;
 
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosCadastroTopico;
+import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosDetalhamentoTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosListagemTopico;
 import com.oracle_one.desafio.forum_hub.application.service.TopicoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,10 +32,14 @@ public class TopicoController {
     }
 
     @GetMapping
-    @Transactional
     public ResponseEntity<Page<DadosListagemTopico>> listagem(@PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable paginacao) {
         var page = topicoService.listar(paginacao);
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
+        var topico = topicoService.detalhar(id);
+        return ResponseEntity.ok(topico);
+    }
 }

@@ -47,4 +47,9 @@ public class TopicoService {
         var page = topicoRepository.findAllByAtivoTrue(paginacao).map(DadosListagemTopico::new);
         return page;
     }
+
+    public DadosDetalhamentoTopico detalhar(Long id) {
+        var topico = topicoRepository.getReferenceById(id);
+        return new DadosDetalhamentoTopico(topico);
+    }
 }
