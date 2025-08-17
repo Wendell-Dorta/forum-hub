@@ -81,4 +81,8 @@ public class Topico {
             this.status = dados.status();
         }
     }
+
+    public void excluir() {
+        this.ativo = false;
+    }
 }

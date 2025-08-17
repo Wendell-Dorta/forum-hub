@@ -45,4 +45,10 @@ public class TopicoController {
         var topico = topicoService.atualizar(dados);
         return ResponseEntity.ok(topico);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletar(@PathVariable  Long id) {
+        topicoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

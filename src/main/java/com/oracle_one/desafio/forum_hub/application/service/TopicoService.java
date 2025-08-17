@@ -4,7 +4,9 @@ import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosAtualizacaoTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosCadastroTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosDetalhamentoTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosListagemTopico;
+import com.oracle_one.desafio.forum_hub.application.validation.ValidadorAtualizacaoTopico;
 import com.oracle_one.desafio.forum_hub.application.validation.ValidadorCadastroTopico;
+import com.oracle_one.desafio.forum_hub.application.validation.ValidadorTopico;
 import com.oracle_one.desafio.forum_hub.domain.model.Curso;
 import com.oracle_one.desafio.forum_hub.domain.model.Topico;
 import com.oracle_one.desafio.forum_hub.domain.model.Usuario;
@@ -17,8 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 
@@ -32,11 +32,14 @@ public class TopicoService {
     private CursoRepository cursoRepository;
 
     @Autowired
-    private List<ValidadorCadastroTopico> validadorCadastro;
+    private List<ValidadorCadastroTopico> validadorCadastroTopicos;
+
+    @Autowired
+    private List<ValidadorTopico> validadorTopicos;
 
     @Transactional
     public DadosDetalhamentoTopico cadastrar(DadosCadastroTopico dados) {
-        validadorCadastro.forEach(v -> v.validar(dados));
+        validadorCadastroTopicos.forEach(v -> v.validar(dados));
 
         Usuario autor = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Curso curso = cursoRepository.getReferenceById(dados.idDoCurso());
@@ -62,6 +65,14 @@ public class TopicoService {
         var topico = topicoRepository.getReferenceById(dados.id());
         topico.atualizarInformacoes(dados);
         topicoRepository.saveAndFlush(topico);
+
         return new DadosDetalhamentoTopico(topico);
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        validadorTopicos.forEach(v -> v.validar(id));
+        var topico = topicoRepository.getReferenceById(id);
+        topico.excluir();
     }
 }
