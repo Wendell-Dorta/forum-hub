@@ -1,11 +1,10 @@
 package com.oracle_one.desafio.forum_hub.api.controller;
 
+import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosAtualizacaoTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosCadastroTopico;
-import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosDetalhamentoTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosListagemTopico;
 import com.oracle_one.desafio.forum_hub.application.service.TopicoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,11 +22,9 @@ public class TopicoController {
     private TopicoService topicoService;
 
     @PostMapping
-    @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroTopico dados, UriComponentsBuilder uriBuilder) {
         var topico = topicoService.cadastrar(dados);
         var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.id()).toUri();
-
         return ResponseEntity.created(uri).body(topico);
     }
 
@@ -40,6 +37,12 @@ public class TopicoController {
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
         var topico = topicoService.detalhar(id);
+        return ResponseEntity.ok(topico);
+    }
+
+    @PutMapping
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoTopico dados) {
+        var topico = topicoService.atualizar(dados);
         return ResponseEntity.ok(topico);
     }
 }

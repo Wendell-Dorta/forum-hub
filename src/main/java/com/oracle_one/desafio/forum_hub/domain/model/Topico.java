@@ -1,5 +1,6 @@
 package com.oracle_one.desafio.forum_hub.domain.model;
 
+import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosAtualizacaoTopico;
 import com.oracle_one.desafio.forum_hub.domain.enums.StatusTopico;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -67,5 +68,17 @@ public class Topico {
         this.curso = curso;
         this.ativo = true;
         this.status = StatusTopico.ABERTO;
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoTopico dados) {
+        if (dados.titulo() != null) {
+            this.titulo = dados.titulo();
+        }
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
+        if (dados.status() != null) {
+            this.status = dados.status();
+        }
     }
 }
