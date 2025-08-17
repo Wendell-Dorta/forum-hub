@@ -2,15 +2,17 @@ package com.oracle_one.desafio.forum_hub.application.service;
 
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosCadastroTopico;
 import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosDetalhamentoTopico;
+import com.oracle_one.desafio.forum_hub.api.dto.topico.DadosListagemTopico;
 import com.oracle_one.desafio.forum_hub.application.validation.ValidadorCadastroTopico;
 import com.oracle_one.desafio.forum_hub.domain.model.Curso;
 import com.oracle_one.desafio.forum_hub.domain.model.Topico;
 import com.oracle_one.desafio.forum_hub.domain.model.Usuario;
 import com.oracle_one.desafio.forum_hub.domain.repository.CursoRepository;
 import com.oracle_one.desafio.forum_hub.domain.repository.TopicoRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +30,6 @@ public class TopicoService {
     @Autowired
     private List<ValidadorCadastroTopico> validadorCadastro;
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Transactional
     public DadosDetalhamentoTopico cadastrar(DadosCadastroTopico dados) {
         validadorCadastro.forEach(v -> v.validar(dados));
@@ -42,5 +41,10 @@ public class TopicoService {
         var topicoDoSalvo = topicoRepository.save(topico);
 
         return new DadosDetalhamentoTopico(topicoDoSalvo);
+    }
+
+    public Page<DadosListagemTopico> listar(Pageable paginacao) {
+        var page = topicoRepository.findAllByAtivoTrue(paginacao).map(DadosListagemTopico::new);
+        return page;
     }
 }
