@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,14 +34,19 @@ public class Topico {
 
     @CreatedDate
     @Column(name = "data_criacao", updatable = false)
+    @JdbcTypeCode(SqlTypes.TIMESTAMP)
     private LocalDateTime dataCriacao;
 
     @LastModifiedDate
     @Column(name = "data_atualizacao")
+    @JdbcTypeCode(SqlTypes.TIMESTAMP)
     private LocalDateTime dataAtualizacao;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private StatusTopico status;
+
+    @Column(name = "ativo")
     private Boolean ativo;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,4 +60,12 @@ public class Topico {
     @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resposta> respostas = new ArrayList<>();
 
+    public Topico(String titulo, String mensagem, Usuario autor, Curso curso) {
+        this.titulo = titulo;
+        this.mensagem = mensagem;
+        this.autor = autor;
+        this.curso = curso;
+        this.ativo = true;
+        this.status = StatusTopico.ABERTO;
+    }
 }

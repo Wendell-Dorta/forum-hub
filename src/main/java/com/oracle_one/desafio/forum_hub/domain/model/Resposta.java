@@ -1,6 +1,5 @@
 package com.oracle_one.desafio.forum_hub.domain.model;
 
-import com.oracle_one.desafio.forum_hub.domain.enums.StatusTopico;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,8 +10,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "repostas")
 @Entity(name = "Resposta")
